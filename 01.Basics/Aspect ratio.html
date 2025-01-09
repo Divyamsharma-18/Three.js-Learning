@@ -1,0 +1,60 @@
+<!-- How It Works
+1. Start with the default aspect ratio: Matches your browser window size.
+2. Press Arrow Right: Increases the aspect ratio (makes the view wider) => cube becomes longer as panorama wide view works and streches from top and bottom.
+3. Press Arrow Left: Decreases the aspect ratio (makes the view narrower). => cube becomes wider in width cause view squishes from top & bottom
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aspect Ratio Experiment</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
+</head>
+<body>
+    <script>
+        // 1. Create the scene
+        const scene = new THREE.Scene();
+
+        // 2. Create the camera with default aspect ratio
+        let aspectRatio = window.innerWidth / window.innerHeight;
+        const camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
+        camera.position.z = 5;
+
+        // 3. Create the renderer
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // 4. Add a cube to the scene
+        const geometry = new THREE.BoxGeometry(); // Cube shape
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // Green color
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube); // Add the cube to the scene
+
+        // 5. Animation loop to render the scene
+        function animate() {
+            requestAnimationFrame(animate);
+            cube.rotation.x += 0.01; // Rotate on the X-axis
+            cube.rotation.y += 0.01; // Rotate on the Y-axis
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // 6. Listen for key presses to change aspect ratio
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight') {
+                aspectRatio += 0.1; // Widen the aspect ratio
+            } else if (event.key === 'ArrowLeft') {
+                aspectRatio -= 0.1; // Narrow the aspect ratio
+            }
+            camera.aspect = aspectRatio; // Update camera's aspect ratio
+            camera.updateProjectionMatrix(); // Apply changes
+        });
+
+        console.log("Press Arrow Right to widen the view, and Arrow Left to narrow it!");
+    </script>
+</body>
+</html>
