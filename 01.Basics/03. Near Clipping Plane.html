@@ -1,0 +1,74 @@
+<!--  How It Works =>
+
+1. Start with a near clipping plane of 1 unit:
+   Cubes closer than 1 unit are not visible.
+2. Press Arrow Up:
+   Increase the near plane distance, making more cubes "disappear" as they get clipped =>
+   So the cube will become smaller per click and eventually disappear.
+3. Press Arrow Down:
+   Decrease the near plane distance, bringing cubes closer into view =>
+   Now the cube will become bigger per click and can also go out of the screen.
+ -->
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Near Clipping Plane Experiment</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
+</head>
+<body>
+    <script>
+      
+        // 1. Create the scene
+        const scene = new THREE.Scene();
+
+        // 2. Create the camera with a near clipping plane of 1
+        const camera = new THREE.PerspectiveCamera(
+            75, // FOV
+            window.innerWidth / window.innerHeight, // Aspect Ratio
+            1, // Near Clipping Plane (start with 1 unit)
+            1000 // Far Clipping Plane
+        );
+        camera.position.z = 5; // Move the camera back
+
+        // 3. Create the renderer
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // 4. Add a row of cubes to the scene
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Red color
+
+        const cubes = [];
+        for (let i = 0; i < 10; i++) {
+            const cube = new THREE.Mesh(geometry, material);
+            cube.position.z = 5 - i; // Place cubes closer to the camera
+            scene.add(cube);
+            cubes.push(cube);
+        }
+
+        // 5. Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // 6. Change near clipping plane on keypress
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowUp') {
+                camera.near += 0.5; // Move the near plane farther
+            } else if (event.key === 'ArrowDown') {
+                camera.near = Math.max(0.1, camera.near - 0.5); // Move the near plane closer
+            }
+            camera.updateProjectionMatrix(); // Apply changes
+            console.log(`Near Clipping Plane: ${camera.near}`);
+        });
+
+        console.log("Press Arrow Up to increase the near plane, Arrow Down to decrease it.");
+    </script>
+</body>
+</html>
