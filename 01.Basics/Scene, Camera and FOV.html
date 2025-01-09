@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOV Experiment</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
+</head>
+<body>
+    <script>
+        // 1. Create the scene
+        const scene = new THREE.Scene();
+
+        // 2. Create the camera with an FOV of 75 (you can change this!)
+        const camera = new THREE.PerspectiveCamera(
+            75, // Field of View
+            window.innerWidth / window.innerHeight, // Aspect Ratio
+            0.1, // Near clipping plane
+            1000 // Far clipping plane
+        );
+        camera.position.z = 5; // Move the camera back
+
+        // 3. Create the renderer
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // 4. Create a spinning cube
+        const geometry = new THREE.BoxGeometry(); // Cube shape
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // Green color
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube); // Add cube to the scene
+
+        // 5. Animation loop to spin the cube
+        function animate() {
+            requestAnimationFrame(animate);
+
+            cube.rotation.x += 0.01; // Rotate on the X-axis
+            cube.rotation.y += 0.01; // Rotate on the Y-axis
+
+            renderer.render(scene, camera); // Render the scene through the camera
+        }
+        animate();
+
+        // 6. Listen for key presses to change FOV
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowUp') {
+                camera.fov -= 5; // Decrease FOV (zoom in)
+            } else if (event.key === 'ArrowDown') {
+                camera.fov += 5; // Increase FOV (zoom out)
+            }
+            camera.updateProjectionMatrix(); // Apply the new FOV
+        });
+
+        console.log("Use the Up and Down Arrow keys to change the FOV!");
+    </script>
+</body>
+</html>
