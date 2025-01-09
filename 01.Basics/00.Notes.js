@@ -29,4 +29,4 @@ If you don't set this correctly, your world might look squished or stretched. �
 🔍 Near Clipping Plane => closest distance at which objects are visible to the camera. Anything closer than this distance gets "clipped" (not rendered).
 
 
- 
+🎥 Far Clipping Plane => maximum distance at which objects are visible to the camera. Anything farther than this distance gets "clipped" (not rendered).
